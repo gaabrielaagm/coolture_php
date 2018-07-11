@@ -1,0 +1,32 @@
+.eventoM{
+	background: rgb(102, 102, 153);
+	width: 100%;
+	border-radius: 9px;
+	height: 900px;
+
+}
+.infoPrinc{
+	margin-top: 15px;
+	background: #000066;
+	color: #fff;
+	width: 70%;
+	font-family: Georgia;
+	border-radius: 7px;
+	
+}
+.extra{
+	color: #99ccff;
+	font-family: verdana;	
+	font-size: 20px;
+
+}
+h3{
+	font-family: Broadway;
+	font-weight: bold;
+	font-size: 30px;
+
+}
+.titulos{
+	font-family: Berlin Sans FB;
+	color: #fff;
+}

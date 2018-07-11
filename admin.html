@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<title>Administradoras</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/estilos.css">
+	<link rel="stylesheet" type="text/css" href="css/font.css">
+	<link rel="icon" href="img/logo.ico">
+	<STYLE type="text/css">
+			section{
+				background-color: #bf80ff;
+				width: 100%;
+				margin-right:200px;
+				margin-bottom: 50px;
+			}
+	</STYLE>
+
+
+</head>
+<body>
+	<header class="header">
+		<div class="contenedor">
+			<span class="icon-menu" id="btn-menu"></span>
+			
+		</div>
+	</header>
+	<div class="banner">
+		<div class="slider">
+			<ul>
+				<li><img src="img/sli1.jpg" alt=""></li>
+				<li><img src="img/sli2.jpg" alt=""></li>
+				<li><img src="img/sli3.jpg" alt=""></li>
+				<li><img src="img/sli4.jpg" alt=""></li>
+			</ul>
+		</div>
+		<div class="contenedor">
+			<p><img src="img/logo.png" class="logo"></p>
+			<h2 class="banner__titulo">¡BIENVENIDAS ADMINISTRADORAS!</h2>
+			<!--<p class="banner__txt"> Elige una bella arte</p>-->
+		</div>
+
+	</div>
+	<section>
+		<nav class="nav" id="nav">
+				<ul class="menu">
+					<li class="menu__item"><a class="menu__link select" href="admin.html">Inicio</a> </li>		
+						<li class="menu__item"><a class="menu__link" href="">ALTAS</a>
+							<ul class="menu">
+								<li><a class="menu__link" href="altas_subclas_menu.php">Subclasificación</a></li>
+								<li><a class="menu__link"  href="altas_artistas_.html">Artistas</a></li>
+								<li><a class="menu__link" href="lista_clasificacion.php">Eventos</a></li>
+							</ul>	
+						</li>
+						<li class="menu__item"><a class="menu__link" href="">BAJAS</a>
+							<ul class="menu">
+								<li><a class="menu__link" href="altas_subclas_menu.php">Subclasificación</a></li>
+								<li><a class="menu__link"  href="altas_artistas.html">Artistas</a></li>
+								<li><a class="menu__link" href="lista_clasificacion.php.html">Eventos</a></li>
+							</ul>	
+						</li>
+					<li class="menu__item"><a class="menu__link" href="index.html">Salir</a></li>	
+					<?php
+						@session_start();
+						$usuario = $_SESSION['k_nombre'];
+						if($usuario != ""){
+							echo '<li class="menu__item"><a class="menu__link" href="">'.$usuario.'</a>';
+							#echo '<center><label>Usuario: ' . $usuario . '</label></center>';
+						}else{
+						?>			
+							<script language="javascript">
+							alert('ERROR DE INICIO DE SESION, FAVOR DE VOLVER A INGRESAR');
+							location.href = "ingresar.html";
+							</script>
+						<?php
+						}
+						?>	
+					<!--<li class="menu__item"><a class="menu__link" href="">Cuenta</a>
+						<ul class="menu">
+							<li><a class="menu__link" href="editarperfil.html">Editar perfil</a></li>
+							<li><a class="menu__link"  href="index.html">Salir</a></li>
+						</ul>	
+					</li>	-->		
+				</ul>
+			</nav>
+
+	</section>
+	
+	<footer class="footer">
+
+		<div class="social">
+			<a href= "#" class="icon-facebook"></a>
+			<a href= "#" class="icon-instagram"></a>
+			<a href= "#" class="icon-googleplus"></a>
+			<a href= "#" class="icon-mail"></a>
+		</div>
+		<p class="copy">&copy; SAGA 2017 - Todos los derechos reservados.</p>
+	</footer>
+	<script src="js/menu.js"></script>
+</body>
+</html>

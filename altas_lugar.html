@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ingresar</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/estilos.css">
+	<link rel="stylesheet" type="text/css" href="css/font.css">
+	<link rel="icon" href="img/logo.ico">
+	<script  type="text/javascript" language="javascript">
+	function validar_lugar(){
+
+		var lugar,calle,num,colonia, mpio,x;
+		alert ("hala"+x);
+		lugar=document.getElementById("nom_lugar").value;
+		calle=document.getElementById("calle").value;
+		num=document.getElementById("num").value;
+		colonia=document.getElementById("colonia").value;
+		mpio=document.getElementById("municipio").value;
+		
+		if(nom_lugar==="" || calle==="" || num==="" || colonia==="" || mpio==="" ){
+			alert("Los campos son obligatorios");
+			return false; 
+		}	
+		else if(nom_lugar.length>20){
+			alert("El nombre es muy largo");
+			return false;
+		}else if(calle.length>20){
+			alert("El calle es muy largo");
+			return false;
+		}else if(num.length>4){
+			alert("El numero es muy largo");
+			return false;
+		}else if(colonia.length>15){
+			alert("El colonia es muy largo");
+			return false;
+		}else if(mpio.length>15){
+			alert("El mpio es muy largo");
+			return false;
+		}
+	}
+
+
+	</script>
+
+	<style type="text/css">
+		p{
+			color: #00004d;
+			font-family: "Arial";
+			transform: translateX(35%);
+		}
+		.opciones{
+			width: 100%;
+			vertical-align: middle;
+			transform: translateX(35%);
+		}
+		.cabecera{
+			height: 250px;
+			background-color: rgba(102, 0, 102,0.8);
+		}
+		.seccion-registro{
+			height: 800px;
+		}
+		.form-register{
+			width: 95%;
+			max-width: 500px;
+			margin: auto;
+			background: white;
+			border-radius: 7px;
+		}
+		.form-register{
+			width: 95%;
+			max-width: 500px;
+			padding: 15px;
+			margin: auto;
+			background: rgba(153, 153, 255,0.9);
+			border-radius: 7px;
+		}
+		.contenedor-inputs {
+			padding: 10px 30px;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+		}
+
+		input{
+			margin-bottom: 15px;
+			padding: 15px;
+			font-size: 16px;
+			border-radius: 3px;
+			border: 1px solid darkgray;
+		}
+
+		.input-48{
+			width: 48%;
+		}
+		.input-100{
+			width: 100%;
+		}
+
+		.btn-enviar{
+			background: rgba(0, 0, 77,1);
+			color: #fff;
+			margin: auto;
+			padding: 10px 40px;
+			cursor: pointer;
+			font-size: 20px;
+		}
+		.btn-enviar:active{
+			transform: scale(1.05);
+		}
+		.from__link{
+			width: 100%;
+			margin: 7px;
+			text-align: center;
+			font-size: 14px;
+		}
+	</style>
+</head>
+<body>
+	<header class="cabecera">
+		<br><br><br><br><br><br><br><br><br><br><br>
+		<div class="contenedor" style="transform: translateX(25%) ">
+			<p><img src="img/logo.png" class="logo" style="height: 230px; width: 230px; transform: translateX(-100%) translateY(-105%);"></p>
+			<h2 class="banner__titulo" style="color: white; text-align: center; transform: translateX(10%) translateY(-30%);">DATOS DE EL LUGAR </h2>
+			<br><br>
+		</div>
+	</header>
+	<section class="seccion-registro">
+		<br><br><br><br>
+		<form action="#" name="form_evento" method="post" class="form-register"  " onsubmit="return validar_lugar()" >
+			<div class="contenedor-inputs" >
+
+				<input type="text" id="nom_lugar" name="nom_lugar" placeholder="Nombre del lugar" class="input-100" ><br><br>
+
+				<input type="text" id="calle" name="calle" placeholder="Calle" class="input-100" ><br><br>
+
+				<b>No.<input type="number" id="num" name="num" min="0" max="5000" step="1" value="1"></b><br><br>
+
+				<input type="text" id="colonia" name="colonia" placeholder="colonia" class="input-100" ><br><br>
+
+				<input type="text" id="municipio" name="municipio" placeholder="Municipio" class="input-100" ><br><br>
+				<input type="submit" name="aceptar" value="Aceptar" class="btn-enviar"><br><br><br>
+			</div>
+		</form>
+	</section>
+	<footer class="footer">
+		<div class="social">
+			<a href= "#" class="icon-facebook"></a>
+			<a href= "#" class="icon-instagram"></a>
+			<a href= "#" class="icon-googleplus"></a>
+			<a href= "#" class="icon-mail"></a>
+		</div>
+		<p class="copy">&copy; SAGA 2017 - Todos los derechos reservados.</p>
+	</footer>
+	<script src="js/menu.js"></script>
+
+</body>
+</html>

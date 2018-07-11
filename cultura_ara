@@ -1,0 +1,454 @@
+-- phpMyAdmin SQL Dump
+-- version 4.7.4
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 27-11-2017 a las 07:24:09
+-- Versión del servidor: 10.1.26-MariaDB
+-- Versión de PHP: 7.1.9
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de datos: `cultura`
+--
+
+DELIMITER $$
+--
+-- Procedimientos
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `consultar_correo` (IN `_correo` VARCHAR(80))  BEGIN
+SELECT * from cultura.usuario WHERE CORREO=_correo;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `consultar_intereses` (IN `_id_u` INT(6))  NO SQL
+SELECT ID_C from cultura.se_interesa
+	WHERE ID_U = _id_u$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `editar_evento` (IN `titulo_` INT(20), IN `hora_` TIME, IN `fecha_` DATE, IN `id_sc` INT(6), IN `num_as` INT(6), IN `descr` TEXT, IN `id_ev` INT(6))  NO SQL
+UPDATE cultura.usuario SET TITULO=titulo_, HORA=hora_, FECHA=fecha_, ID_S=id_sc, ASISTENCIAS=num_as, DESC_E=descr WHERE ID_E=id_ev$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `editar_perfil` (IN `_id` INT(6), IN `_nombre` VARCHAR(50), IN `_password` VARCHAR(15), IN `_correo` VARCHAR(80), IN `_notif` INT(1))  NO SQL
+UPDATE cultura.usuario SET NOM_U=_nombre, PASSWORD=_password, CORREO=_correo, NOTIF=_notif WHERE ID_U=_id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertar` (IN `_nombre` VARCHAR(50), IN `_password` VARCHAR(15), IN `_correo` VARCHAR(80), IN `_notif` TINYINT(1))  BEGIN
+insert into cultura.usuario( NOM_U, PASSWORD, CORREO, NOTIF) 
+                        values(_nombre,_password,_correo,_notif) ;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertar_se_interesa` (IN `_CORREO` VARCHAR(80), IN `_ID_C` INT(1))  BEGIN
+	insert into se_interesa (ID_U,ID_C)
+    values
+    (
+    (select ID_U from usuario where CORREO = _CORREO),
+    _ID_C
+    );
+END$$
+
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `artista`
+--
+
+CREATE TABLE `artista` (
+  `ID_A` int(6) NOT NULL,
+  `NOM_A` varchar(20) NOT NULL,
+  `FEC_NAC` date DEFAULT NULL,
+  `FEC_FALL` date DEFAULT NULL,
+  `DESC_A` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `clasificacion`
+--
+
+CREATE TABLE `clasificacion` (
+  `ID_C` int(1) NOT NULL,
+  `NOM_C` varchar(50) NOT NULL,
+  `DESC_C` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `clasificacion`
+--
+
+INSERT INTO `clasificacion` (`ID_C`, `NOM_C`, `DESC_C`) VALUES
+(1, 'Danza', 'Bailazos'),
+(2, 'Pintura', NULL),
+(3, 'Arquitectura', NULL),
+(4, 'Escultura', NULL),
+(5, 'Musica', NULL),
+(6, 'Cine', NULL),
+(7, 'Literatura', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `evento`
+--
+
+CREATE TABLE `evento` (
+  `ID_E` int(6) NOT NULL,
+  `TITULO` varchar(20) NOT NULL,
+  `HORA` time NOT NULL,
+  `FECHA` date NOT NULL,
+  `DESC_E` text NOT NULL,
+  `ID_S` int(2) DEFAULT NULL,
+  `ASISTENCIAS` int(6) DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `evento`
+--
+
+INSERT INTO `evento` (`ID_E`, `TITULO`, `HORA`, `FECHA`, `DESC_E`, `ID_S`, `ASISTENCIAS`) VALUES
+(1, 'CONCIERTO CLASICA', '13:00:00', '2017-11-30', 'Deleitate con la música clásica. Un concierto que jamás olvidarás.', 3, 0),
+(2, 'CONCIERTO ROCK&ROLL', '17:00:00', '2018-01-15', 'Recuerda aquella música que tanto escuchabas. ¡Te esperamos!', 2, 0),
+(3, 'BAILANDO JAZZ', '20:30:00', '2017-11-29', 'No te pierdas esta gran oportunidad. Diviértete bailando Jazz.', 4, 0),
+(4, 'POP DE LOS 80\'S', '21:40:00', '2017-12-27', 'Ven y canta aquellas canciones inolvidables de los 90\'s. No te lo pierdas.', 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `eventos_subclas`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `eventos_subclas` (
+`ID_E` int(6)
+,`TITULO` varchar(20)
+,`HORA` time
+,`FECHA` date
+,`DESC_E` text
+,`SUBCLASIFICACION` varchar(50)
+,`ASISTENCIAS` int(6)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `lista_eventos`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `lista_eventos` (
+`ID_E` int(6)
+,`TITULO` varchar(20)
+,`HORA` time
+,`FECHA` date
+,`DESC_E` text
+,`NOM_S` varchar(50)
+,`NOM_C` varchar(50)
+,`ASISTENCIAS` int(6)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `lista_subclasif`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `lista_subclasif` (
+`ID_S` int(2)
+,`NOM_S` varchar(50)
+,`DESC_S` text
+,`NOM_C` varchar(50)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `lugar`
+--
+
+CREATE TABLE `lugar` (
+  `ID_L` int(6) NOT NULL,
+  `ID_E` int(6) NOT NULL,
+  `NOM_L` varchar(20) NOT NULL,
+  `CALLE` varchar(20) NOT NULL,
+  `NUM` int(4) NOT NULL,
+  `COL` varchar(15) NOT NULL,
+  `MPIO` varchar(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pertenece`
+--
+
+CREATE TABLE `pertenece` (
+  `ID_E` int(6) DEFAULT NULL,
+  `ID_A` int(6) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `se_interesa`
+--
+
+CREATE TABLE `se_interesa` (
+  `ID_U` int(6) DEFAULT NULL,
+  `ID_C` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `se_interesa`
+--
+
+INSERT INTO `se_interesa` (`ID_U`, `ID_C`) VALUES
+(12, 2),
+(12, 3),
+(12, 4),
+(12, 5),
+(13, 2),
+(13, 3),
+(13, 4),
+(13, 5),
+(14, 1),
+(14, 4),
+(14, 5),
+(14, 6),
+(14, 7),
+(11, 1),
+(11, 5),
+(3, 4),
+(3, 5),
+(3, 6),
+(3, 7);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `subclasificacion`
+--
+
+CREATE TABLE `subclasificacion` (
+  `ID_S` int(2) NOT NULL,
+  `NOM_S` varchar(50) NOT NULL,
+  `DESC_S` text,
+  `ID_C` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `subclasificacion`
+--
+
+INSERT INTO `subclasificacion` (`ID_S`, `NOM_S`, `DESC_S`, `ID_C`) VALUES
+(1, 'Pop', 'Música Pop es aquella que, al margen de la instrumentación y tecnológica aplicada para su creación, conserva la estructura formal \"verso -estribillo - verso\", ejecutada de un modo sencillo, melódico, pegadizo,y normalmente asimilable para el gran publico. Sus grandes diferencias con otros estilos están en las voces melódicas y claras en primer plano y percusiones lineales y repetidas. además empezaron a triunfar o a Empezar en el siglo XX en Inglaterra, en la década de los 60. Michael Jackson es el máximo representante de este estilo.', 5),
+(2, 'Rock and roll', 'El Rock and Roll (o rocanrol en algunos lugares) emergía como un estilo musical definido en Estados Unidos en la decada de 1950, esto lo podemos ver en algunos elementos del rock and roll pueden ser escuchados en las grabaciones deblues  o emisoras tan lejanas como de los años 1920. Los inicios del rock and roll combina elementos del blues, boogie woogie, y jazz con influencias dela música folclorica Apalache, gospel, country y western especializado este genero especializado.', 5),
+(3, 'Clasica', 'El clasicismo se comenzó a notar en la musical a comienzos de 1750 (muerte de J. S.Bach) y termina en 1820 aproximadamente. La música clásica propiamente dicha coincide con la época llamada clasicismo, que en otras artes se trata del redescubrimiento y copia de los clásicos del arte greco romano, que era considerado tradicional o ideal. En la música no existió en una cuadragésima parte de  un clasicismo original, ya que no había quedado escrita ninguna música de la época griega o romana. La música del clasicismo fue evolucionando hacia una música extremadamente equilibrada entre armonía y melódica.', 5),
+(4, 'Jazz', 'El jazz es un estilo musical que enpezo a nacer a finales del siglo XIX enEstados Unidos y que se expande de forma global a lo largo de todo elsiglo XX.\r\n\r\nLa historia del jazz se caracteriza por dos rasgos fundamentales:\r\n\r\n* Por su constante asimilación de otras tendencias musicales estilística o culturalmente ajenas a el; por otro, por su capacidad degenerar otros estilos musicales, como el rock and roll, que terminarían por evolucionar de forma independiente al jazz.\r\n* Por la sucesión de forma ininterrumpida  de un numeroso conjunto de subestilos que, vistos en aquella época en perspectiva, manifiestan entre algunos de ellos enormes diferencias musicales ', 5);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuario`
+--
+
+CREATE TABLE `usuario` (
+  `ID_U` int(6) NOT NULL,
+  `NOM_U` varchar(50) NOT NULL,
+  `PASSWORD` varchar(15) NOT NULL,
+  `CORREO` varchar(80) NOT NULL,
+  `NOTIF` int(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`ID_U`, `NOM_U`, `PASSWORD`, `CORREO`, `NOTIF`) VALUES
+(2, 'Gaby Guerrero', '123', 'gaby@hotmail.com', 1),
+(3, 'Aracely', '123', 'ara@hotmail.com', 1),
+(4, 'Administradoras', '123', 'soyla@admin.com', 1),
+(5, 'Arizbet', '123', 'ariz@hotmail.com', 1),
+(6, 'Citlaly Almanza', '123', 'citla@hotmail.com', 1),
+(8, 'Alfonso Guerrero', '123', 'alfonso@gmail.com', 1),
+(9, 'A', '123', 'a@gmail.com', 1),
+(10, 'B', '123', 'b@gmail.com', 1),
+(11, 'Alicia', '1234', 'ali_1@gmail.com', 1),
+(12, 'Lorena', '12345', 'lore@gmail.com', 1),
+(13, 'Laura', 'hola', 'lau@gmail.com', 1),
+(14, 'Alberto LÃ³pez', '123', 'beto@gmail.com', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `eventos_subclas`
+--
+DROP TABLE IF EXISTS `eventos_subclas`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `eventos_subclas`  AS  select `evento`.`ID_E` AS `ID_E`,`evento`.`TITULO` AS `TITULO`,`evento`.`HORA` AS `HORA`,`evento`.`FECHA` AS `FECHA`,`evento`.`DESC_E` AS `DESC_E`,(select `subclasificacion`.`NOM_S` from `subclasificacion` where (`evento`.`ID_S` = `subclasificacion`.`ID_S`)) AS `SUBCLASIFICACION`,`evento`.`ASISTENCIAS` AS `ASISTENCIAS` from `evento` ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `lista_eventos`
+--
+DROP TABLE IF EXISTS `lista_eventos`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `lista_eventos`  AS  select `evento`.`ID_E` AS `ID_E`,`evento`.`TITULO` AS `TITULO`,`evento`.`HORA` AS `HORA`,`evento`.`FECHA` AS `FECHA`,`evento`.`DESC_E` AS `DESC_E`,`subclasificacion`.`NOM_S` AS `NOM_S`,`clasificacion`.`NOM_C` AS `NOM_C`,`evento`.`ASISTENCIAS` AS `ASISTENCIAS` from ((`evento` join `subclasificacion` on((`evento`.`ID_S` = `subclasificacion`.`ID_S`))) join `clasificacion` on((`subclasificacion`.`ID_C` = `clasificacion`.`ID_C`))) ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `lista_subclasif`
+--
+DROP TABLE IF EXISTS `lista_subclasif`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `lista_subclasif`  AS  select `subclasificacion`.`ID_S` AS `ID_S`,`subclasificacion`.`NOM_S` AS `NOM_S`,`subclasificacion`.`DESC_S` AS `DESC_S`,`clasificacion`.`NOM_C` AS `NOM_C` from (`subclasificacion` join `clasificacion` on((`subclasificacion`.`ID_C` = `clasificacion`.`ID_C`))) ;
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `artista`
+--
+ALTER TABLE `artista`
+  ADD PRIMARY KEY (`ID_A`);
+
+--
+-- Indices de la tabla `clasificacion`
+--
+ALTER TABLE `clasificacion`
+  ADD PRIMARY KEY (`ID_C`);
+
+--
+-- Indices de la tabla `evento`
+--
+ALTER TABLE `evento`
+  ADD PRIMARY KEY (`ID_E`),
+  ADD KEY `ID_S` (`ID_S`);
+
+--
+-- Indices de la tabla `lugar`
+--
+ALTER TABLE `lugar`
+  ADD PRIMARY KEY (`ID_L`),
+  ADD KEY `ID_E` (`ID_E`);
+
+--
+-- Indices de la tabla `pertenece`
+--
+ALTER TABLE `pertenece`
+  ADD KEY `ID_E` (`ID_E`),
+  ADD KEY `ID_A` (`ID_A`);
+
+--
+-- Indices de la tabla `se_interesa`
+--
+ALTER TABLE `se_interesa`
+  ADD KEY `ID_U` (`ID_U`),
+  ADD KEY `ID_C` (`ID_C`);
+
+--
+-- Indices de la tabla `subclasificacion`
+--
+ALTER TABLE `subclasificacion`
+  ADD PRIMARY KEY (`ID_S`),
+  ADD KEY `ID_C` (`ID_C`);
+
+--
+-- Indices de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  ADD PRIMARY KEY (`ID_U`),
+  ADD UNIQUE KEY `CORREO` (`CORREO`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `artista`
+--
+ALTER TABLE `artista`
+  MODIFY `ID_A` int(6) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `clasificacion`
+--
+ALTER TABLE `clasificacion`
+  MODIFY `ID_C` int(1) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT de la tabla `evento`
+--
+ALTER TABLE `evento`
+  MODIFY `ID_E` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `lugar`
+--
+ALTER TABLE `lugar`
+  MODIFY `ID_L` int(6) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `subclasificacion`
+--
+ALTER TABLE `subclasificacion`
+  MODIFY `ID_S` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  MODIFY `ID_U` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `evento`
+--
+ALTER TABLE `evento`
+  ADD CONSTRAINT `evento_ibfk_1` FOREIGN KEY (`ID_S`) REFERENCES `subclasificacion` (`ID_S`);
+
+--
+-- Filtros para la tabla `lugar`
+--
+ALTER TABLE `lugar`
+  ADD CONSTRAINT `lugar_ibfk_1` FOREIGN KEY (`ID_E`) REFERENCES `evento` (`ID_E`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `pertenece`
+--
+ALTER TABLE `pertenece`
+  ADD CONSTRAINT `pertenece_ibfk_1` FOREIGN KEY (`ID_E`) REFERENCES `evento` (`ID_E`) ON DELETE CASCADE,
+  ADD CONSTRAINT `pertenece_ibfk_2` FOREIGN KEY (`ID_A`) REFERENCES `artista` (`ID_A`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `se_interesa`
+--
+ALTER TABLE `se_interesa`
+  ADD CONSTRAINT `se_interesa_ibfk_1` FOREIGN KEY (`ID_U`) REFERENCES `usuario` (`ID_U`) ON DELETE CASCADE,
+  ADD CONSTRAINT `se_interesa_ibfk_2` FOREIGN KEY (`ID_C`) REFERENCES `clasificacion` (`ID_C`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `subclasificacion`
+--
+ALTER TABLE `subclasificacion`
+  ADD CONSTRAINT `subclasificacion_ibfk_1` FOREIGN KEY (`ID_C`) REFERENCES `clasificacion` (`ID_C`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
